@@ -1,0 +1,22 @@
+<title>Login</title>
+{% extends "commonLayout.html" %}
+{% block bodyContent %}
+<br>
+<form method="POST" action="">
+        {{ form.csrf_token }}
+    <div class="container">
+        <p class="display-4">Login</p><br>
+    </div>
+    <div class="container">
+        <div class="form-group mb-4 col-4">
+            <label class="h6">{{form.username.label}}</label>
+            {{form.username(class="form-control")}}
+        </div>
+
+        <div class="form-group mb-4 col-4">
+            <label class="h6">{{form.password.label}}</label>{{form.password(class="form-control mb-4")}}
+            {{form.submit(class="btn btn-info")}}
+        </div>
+    </div>
+</form>
+{% endblock %}

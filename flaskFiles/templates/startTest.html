@@ -1,0 +1,37 @@
+<title>Initiate Test</title>
+
+{% extends "commonLayout.html" %}
+{% block bodyContent %}
+<script src="/static/javascript/startTest.js"></script>
+<div class="container">
+    <br>
+    <p class="display-4">Begin Test</p>
+        {% if current_user.slackAppTokenValidity == "Valid" and current_user.slackTokenValidity == "Valid" and current_user.slackUserTokenValidity == "Valid" and current_user.zulipAdminRCValidity == "Valid" and current_user.zulipBotRCValidity == "Valid"%}
+            <form method="POST" action="" onsubmit="return showSpinner();">
+                {{ form.csrf_token }}
+                <br>
+                <div class="container">
+                    <p class="lead">Running the test suite, will <b>delete</b> all workspace data in both <u>Slack</u> and <u>Zulip</u>.<br>By proceeding you accept the risk of loss of data!<br></p>
+                    <p class="lead">Currently using uploaded Slack and Zulip Data</p>
+                    <div class="form-check">
+                        <div class="container">
+                            <input onclick="toggleButton()" type="checkbox" class="form-check-input" id="acceptBox">
+                            <label class="form-check-label"><b class="h6">I accept the risks</b></label>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="container">
+                        <button onclick="document.getElementById('acceptBox').checked = false;" type="submit" class="btn btn-info" id="runTestButton">Run Tests
+                            <span id = "loadingSpinner" class="spinner-border" role="status" style="width: 0.8rem; height: 0.8rem; border-width: .17em; vertical-align: -0.5px;"></span></button>
+                    </div>
+                </div>
+            </form>
+            <script>
+                document.getElementById("loadingSpinner").style.display = "none";
+                document.getElementById("runTestButton").disabled = true;
+            </script>
+        {% else %}
+            {% include "missingInfoLayout.html" %}
+        {% endif %}
+</div>
+{% endblock %}

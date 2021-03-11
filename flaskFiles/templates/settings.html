@@ -1,0 +1,121 @@
+<title>Settings</title>
+
+<head><style>
+     #additionalInfo:hover {
+        background-color: #D3D3D3;
+    }
+
+</style></head>
+
+{% extends "commonLayout.html" %}
+{% block bodyContent %}
+
+<script>
+     // enable both tooltips on this page using the jQuery tooltip selector
+    window.onload = () => {
+         $('#deleteAccountTooltip').tooltip() && $('#deleteIntegrationTooltip').tooltip();
+
+         if ('{{current_user.testMode}}' == 'True') {
+             document.getElementById("test").checked = true;
+         }
+    }
+</script>
+<script src="/static/javascript/rotateArrow.js"></script>
+
+<div class="container">
+    <p class="display-4">Settings</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-7">
+                <div class="card">
+                    <div class="card-header h4">Testing Mode</div>
+                    <div class="card-body" style="padding-bottom: 0;">
+                        <form action="" method="POST">
+                            {{ testModeForm.csrf_token }}
+                            {{ testModeForm.nameOfForm(hidden=True, value='testMode') }}
+
+                            <div class="form-check" style="padding-left:0;">
+                                {{ testModeForm.testModeCheckbox(id="test")}}
+
+                                <label class="form-check-label" for="testingEnabled">Enable testing options</label><p></p>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-sm">Save</button> <button id="resetToDefault" onclick="document.getElementById('test').checked = false; " type="button" class="btn btn-secondary btn-sm">Reset to defaults</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-7">
+                <div class="card">
+                    <div class="card-header h4">User Information</div>
+                    <div class="card-body">
+                        <img src="/static/svgs/binoculars.svg" width="30" height="30"/>&nbsp;&nbsp;<a href="{{url_for('ViewStoredInformation')}}">View stored information</a><br><br>
+                        <img src="/static/svgs/lock.svg" width="30" height="30"/>&nbsp;&nbsp;<a href="{{url_for('ChangePassword')}}">Change Password</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container"><br>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-7">
+                <div class="card">
+                    <div class="card-header h4">Customisations</div>
+                    <div class="card-body" style="padding-bottom: 0;">
+                        <img src="/static/svgs/chat-left.svg" width="30" height="30"/>&nbsp;&nbsp;<a href="{{url_for('CustomMessagePrefix')}}">Edit message prefixes</a><br><br>
+                        <img src="/static/svgs/emoji-smile.svg" width="30" height="30"/>&nbsp;&nbsp;<a href="{{url_for('EmojiAdditions')}}">Edit emoji mappings</a><br><br>
+                    </div>
+                </div>
+            </div>
+        </div><br>
+        <div class="row">
+            <div class="col-sm-7">
+                <div class="card">
+                    <div class="card-header h5"><div class="h4" onclick="rotateArrow('additionalInfoArrow')" id="additionalInfo" data-toggle="collapse" data-target="#collapseAdditionalInfo" style="display: inline-block; margin-bottom: 0;">Additional User Details <img id="additionalInfoArrow" src="/static/svgs/chevron-down.svg" width="20px" height="20px" style="margin-bottom: 2px;"/></div></div>
+                    <div class="card-body" style="padding-top: 0;padding-bottom: 0;">
+                        <div class="collapse" id="collapseAdditionalInfo">
+                            <div class="card card-body container" style="border-color: transparent; padding-left:0;">
+                                <form action="" method="POST">
+                                    {{ deleteDetailsForm.csrf_token }} {{ deleteDetailsForm.nameOfForm(hidden=True, value='deleteDetails') }}
+                                    <button type="submit" onclick="return confirm('Stored integration details will be deleted');" class="btn btn-sm btn-warning" style="width: 245px;">Delete stored integration details
+                                        <img src="/static/svgs/info-circle.svg" id="deleteIntegrationTooltip" width="20px" height="20px" data-toggle="tooltip" data-html="true"
+                                             title="
+                                                {% if current_user.slackToken == 'NONE' and current_user.slackAppToken == 'NONE' and current_user.zulipBotRC == 'NONE' and current_user.zulipAdminRC == 'NONE' and current_user.slackPrefix == '{name} for Zulip |' and current_user.zulipPrefix == '{name} for Slack |' %}
+                                                    You have no stored integration details
+                                                {% else %}
+                                                    {% for detail in [{current_user.slackAppToken : 'Slack App Token'}, {current_user.slackToken : 'Slack Bot Token'}, {current_user.slackUserToken : 'Slack User Token'}, {current_user.zulipAdminRC : 'Zulip Admin RC'}, {current_user.zulipBotRC : 'Zulip Bot RC'}] %}
+                                                        {% for i, j in detail.items() %}
+                                                            {% if i != 'NONE' %}
+                                                                {{j}}<br>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endfor %}
+
+                                                    {% if current_user.slackPrefix != '{name} from Zulip |' %}
+                                                        Slack Prefix<br>
+                                                    {% endif %}
+
+                                                    {% if current_user.zulipPrefix != '{name} from Slack |' %}
+                                                        Zulip Prefix<br>
+                                                    {% endif %}
+                                                {% endif %}
+                        "/></button><br></form>
+                                <form action="" method="POST">
+                                    {{ deleteAccountForm.csrf_token }}{{ deleteAccountForm.nameOfForm(hidden=True, value='deleteAccount') }}
+                                    <button type="submit" class="btn btn-sm btn-danger" style="width: 140px; color: #212529;">Delete Account
+                                        <img src="/static/svgs/info-circle.svg" id="deleteAccountTooltip" data-toggle="tooltip" data-html="true" title="<b>This action is permanent</b>" width="20px" height="20px" />
+                                    </button></form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

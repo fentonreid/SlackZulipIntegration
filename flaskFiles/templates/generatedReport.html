@@ -1,0 +1,83 @@
+<title>Test Results</title>
+<head><style>
+    #hoverableRow:hover {
+        background-color: #D3D3D3;
+    }
+</style></head>
+{% extends "commonLayout.html" %}
+{% block bodyContent %}
+<script>
+    // enable both tooltips on this page using the jQuery tooltip selector
+    window.onload = () => {
+                            $('#passedToolTip').tooltip() && $('#failedToolTip').tooltip();
+                          }
+</script>
+<script src="/static/javascript/rotateArrow.js"></script>
+
+<div class="container">
+    <br>
+    <p class="display-4">Test Results</p>
+    <br>
+    <div class="container">
+        <p class="h2">Short Summary</p>
+        <div class="table-responsive">
+            <table class="table table-sm" style="width: 0;">
+                <tbody>
+                <tr><th>Created At</th><td>{{reportObject.createdAt}}</td></tr>
+                <tr><th>Total ({{reportObject.total}})</th>
+                    <td>
+                        <div class="progress" style="width: 510px;">
+                            <div id="passedToolTip" class="progress-bar bg-success" role="progressbar"  data-toggle="tooltip" data-placement="top" data-html="true" data-container="body" title="Passed: <i>{{reportObject.passed}}/{{reportObject.total}} ({{reportObject.percentagePassed}}%)</i>" style="width: {{reportObject.percentagePassed}}%"> {{reportObject.passed}}</div>
+                            <div id="failedToolTip" class="progress-bar bg-danger" role="progressbar"  data-toggle="tooltip" data-placement="top" data-html="true" data-container="body" title="Failed: <i>{{reportObject.failed}}/{{reportObject.total}} ({{100-reportObject.percentagePassed}}%)</i>" style="width: {{100-reportObject.percentagePassed}}%">{{reportObject.failed}}</div>
+                        </div>
+                        <i>({{reportObject.percentagePassed}}% successful)</i></td>
+                </tr>
+                <tr><th>Duration</th><td>{{reportObject.duration}}s</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+
+    <div class="container">
+        <p class="h2">Test Table</p>
+        <table class="table table-sm" style="margin-bottom: 0;">
+            <tr>
+                <th style="padding-left: 0px; padding-right: 0px;">ID</th>
+                <th style="width: 800px; padding-left: 15px;">Test Name</th>
+                <th style="text-align: center;padding-left: 0px; padding-right: 0px;">Result</th>
+                <th style="text-algin: center;width: 80px;padding-left: 5px; padding-right: 5px;">Duration</th>
+            </tr>
+            {% for singleTest in reportObject.testData %}
+                {% if singleTest.result == 'Pass' %}
+                    <tr>
+                {% else %}
+                    <tr id="hoverableRow" onclick="rotateArrow('arrow{{singleTest.id}}')" data-toggle="collapse" data-target="#collapse{{singleTest.id}}">
+                {% endif %}
+
+                <td style="width: 45px;padding: 2px 2px 2px 2px;border-right: solid 2px;">{{singleTest.id}}
+
+                {% if singleTest.result == 'Fail' and singleTest.failureMSG != "" %}
+                    <img id="arrow{{singleTest.id}}" src="/static/svgs/chevron-down.svg"/>
+                </td>
+                 {% endif %}
+                </td>
+
+                <td style="width:800px;padding: 2px 0px 2px 15px;">{{singleTest.testName}}</td>
+                <td style="width:89px;text-align: center;padding: 2px 0px 2px 0px;" class={{singleTest.highlight}}>{{singleTest.result}}</td>
+                <td style="width: 80px; padding: 2px 2px 2px 7px;">{{singleTest.duration}}</td>
+            </tr>
+
+                {% if singleTest.result == 'Fail' and singleTest.failureMSG != "" %}
+                    </table>
+                    <div id="collapse{{singleTest.id}}" class="collapse container">
+                        <code style="white-space:pre-wrap; line-height: 1.6; font-size: 0.8rem;">{{singleTest.failureMSG}}</code>
+                    </div>
+                    <table  class="table table-sm" style="margin-bottom: 0;">
+                {% endif %}
+            {% endfor %}
+        </table>
+        <br>
+    </div>
+</div>
+{% endblock %}

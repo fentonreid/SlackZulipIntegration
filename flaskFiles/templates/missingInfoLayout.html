@@ -1,0 +1,29 @@
+{% if current_user.slackAppTokenValidity == "Not Uploaded" or current_user.slackTokenValidity == "Not Uploaded" or current_user.slackUserTokenValidity == "Not Uploaded" or current_user.zulipAdminRCValidity == "Not Uploaded" or current_user.zulipBotRCValidity == "Not Uploaded" %}
+    <br>
+    <div class="container">
+        <p class="h3">Missing Upload(s)</p>
+        <div class="list-group list-group-flush">
+            {% for info in [[current_user.slackAppToken, 'SlackAppToken', 'Slack App Token'], [current_user.slackToken, 'SlackToken', 'Slack Bot Token'], [current_user.slackUserToken, 'SlackUserToken', 'Slack User Token'], [current_user.zulipAdminRC, 'ZulipAdminRC', 'Zulip Admin RC'], [current_user.zulipBotRC, 'ZulipBotRC', 'Zulip Bot RC']] %}
+                {% if info[0] == "NONE" %}
+                    <a href="{{url_for(info[1])}}" class="list-group-item list-group-item-action" style="width: 25%;">{{info[2]}}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <br><br>
+{% endif %}
+{% if (current_user.slackAppTokenValidity not in ['Not Uploaded', 'Valid']) or (current_user.slackTokenValidity not in ['Not Uploaded', 'Valid']) or (current_user.slackUserTokenValidity not in ['Not Uploaded', 'Valid']) or (current_user.zulipAdminRCValidity not in ['Not Uploaded', 'Valid']) or (current_user.zulipBotRCValidity not in ['Not Uploaded', 'Valid']) %}
+    <br>
+    <div class="container">
+        <p class="h3">Validate Upload(s)</p>
+        <div class="list-group list-group-flush">
+            {% for info in [[current_user.slackAppTokenValidity, 'ValidateSlackAppToken', 'Slack App Token'], [current_user.slackTokenValidity, 'ValidateSlackBotToken', 'Slack Bot Token'], [current_user.slackUserTokenValidity, 'ValidateSlackUserToken', 'Slack User Token'], [current_user.zulipAdminRCValidity, 'ValidateZulipAdminRC', 'Zulip Admin RC'], [current_user.zulipBotRCValidity, 'ValidateZulipBotRC', 'Zulip Bot RC']] %}
+                    {% if info[0] != "Not Uploaded" and info[0] != "Valid" %}
+                        <form method="POST" action="{{url_for(info[1])}}" style="margin-bottom: 0;">
+                            <button type="submit" class="list-group-item list-group-item-action a" style="width: 25%;cursor: auto; border-top: 0; border-left: 0; border-right: 0; outline: none;">{{info[2]}}</button>
+                        </form>
+                    {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

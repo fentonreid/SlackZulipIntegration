@@ -1,0 +1,67 @@
+<title>Start Integration</title>
+
+{% extends "commonLayout.html" %}
+{% block bodyContent %}
+<style>
+    #slackStatus, #zulipStatus {
+            border: 0;
+            background-color: white;
+            box-shadow: none;
+            outline: none;
+            cursor: text
+            width: 25px;
+            height: 25px;
+    }
+}
+</style>
+<script>let zulipAuth = {'site' : '{{zulipAuth.site|e}}', 'email' : '{{zulipAuth.email|e}}', 'key' : '{{zulipAuth.key}}'};</script>
+
+<script src="/static/javascript/startIntegration.js"></script>
+<div class="container">
+    <br>
+    <p class="display-4">Begin Integration</p>
+    {% if current_user.slackAppTokenValidity == "Valid" and current_user.slackTokenValidity == "Valid" and current_user.slackUserTokenValidity == "Valid" and current_user.zulipAdminRCValidity == "Valid" and current_user.zulipBotRCValidity == "Valid"%}
+        <br>
+        <div class="container">
+            <div class="table-responsive center">
+                <table id="integrationTable" class="table table center" style="width: 0; margin: 0; width: 99%; table-layout: fixed;">
+                <thead class="thead-dark">
+                <tr style="padding-right: 30px">
+                  <th class="h5" style="text-align: center; border: 0;">Service</th>
+                  <th class="h5" style="text-align: center; border: 0;">Status</th>
+                  <th class="h5" style="text-align: center; border: 0;">State</th>
+                </thead>
+                </tr>
+                <tr style="padding-right: 30px">
+                  <td style="text-align: center;">Slack</td>
+                  <td style="text-align: center;"><img id="slackStatus" data-toggle="tooltip" data-placement="right" data-html="true" title="Idle" /></td>
+                  <td id="slackState" style="text-align: center;"><b>OFF</b></td>
+                </tr>
+                <tr style="padding-right: 30px">
+                  <td style="text-align: center;">Zulip</td>
+                  <td style="text-align: center;"><img id="zulipStatus" data-toggle="tooltip" data-placement="right" data-html="true" title="Idle" /></td>
+                  <td id="zulipState" style="text-align: center;"><b>OFF</b></td>
+                </tr>
+            </table>
+            </div>
+            <div style="text-align: center">
+                <button onclick="startIntegration()" id="startButton" type="submit" class="btn btn-lg btn-success" style="width: 15%; height: 6%;">Start</button>
+                <button onclick="stopIntegration()" id="stopButton" type="button" class="btn btn-lg btn-danger" style="width: 15%; height: 6%;">Stop</button>
+            </div>
+        </div>
+        <script>
+             // initialising the tooltips
+             $('#slackStatus').tooltip();
+             $('#zulipStatus').tooltip();
+
+             // onload of the page
+             document.getElementById("stopButton").disabled = false;
+             document.getElementById('slackStatus').src = "/static/images/yellowCircle.png";
+             document.getElementById('zulipStatus').src = "/static/images/yellowCircle.png";
+        </script>
+
+    {% else %}
+        {% include "missingInfoLayout.html" %}
+    {% endif %}
+</div>
+{% endblock %}

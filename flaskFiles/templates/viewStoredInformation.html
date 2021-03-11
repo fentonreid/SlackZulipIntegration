@@ -1,0 +1,94 @@
+<title>Stored Data</title>
+
+{% extends "commonLayout.html" %}
+{% block bodyContent %}
+
+
+<script src="/static/javascript/viewStoredInformation.js"></script>
+
+<div class="container">
+    <br>
+    <p class="display-4">Stored Information</p>
+    <h4>Personal Information</h4>
+    <div class="container">
+        <label>Username: <input class="form-control" type="text" placeholder="{{current_user.username}}" readonly></label>
+        <br>
+        <br>
+    </div>
+
+    <h5>Stored Integration Data</h5>
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <tr>
+                    <th style="width: 15%;">Type</th>
+                    <th style="width: 4%;"></th>
+                    <th>Value</th>
+                    <th style="width: 15%;">Valid</th>
+                </tr>
+                <tr>
+                    <td>Slack App Token</td>
+                    <td><a href="{{url_for('SlackAppToken')}}"><img src="/static/svgs/cloud-arrow-up.svg" width="32" height="32"/></a></td>
+                    <td>
+                        <input id="slackAppTokenInput" class="form-control" type="text" onmouseleave="onmouseOff('slackAppTokenInput')" onmouseover="onmouseOn('slackAppTokenInput', '{{current_user.slackAppToken|e}}')" placeholder="*************" readonly></td>
+                    <td>
+                        {% if current_user.slackAppTokenValidity == 'Valid'%}
+                        Yes
+                        {% else %}
+                        No
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Slack Token</td>
+                    <td><a href="{{url_for('SlackToken')}}"><img src="/static/svgs/cloud-arrow-up.svg" width="32" height="32"/></a></td>
+                    <td><input id="slackTokenInput" class="form-control" type="text" onmouseleave="onmouseOff('slackTokenInput')" onmouseover="onmouseOn('slackTokenInput', '{{current_user.slackToken|e}}')" placeholder="*************" readonly></td>
+                    <td>
+                        {% if current_user.slackTokenValidity == 'Valid' %}
+                        Yes
+                        {% else %}
+                        No
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Slack User Token</td>
+                    <td><a href="{{url_for('SlackUserToken')}}"><img src="/static/svgs/cloud-arrow-up.svg" width="32" height="32"/></a></td>
+                    <td><input id="slackUserTokenInput" class="form-control" type="text" onmouseleave="onmouseOff('slackUserTokenInput')" onmouseover="onmouseOn('slackUserTokenInput', '{{current_user.slackUserToken|e}}')" placeholder="*************" readonly></td>
+                    <td>
+                        {% if current_user.slackUserTokenValidity == 'Valid'%}
+                        Yes
+                        {% else %}
+                        No
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Zulip Admin RC</td>
+                    <td><a href="{{url_for('ZulipAdminRC')}}"><img src="/static/svgs/cloud-arrow-up.svg" width="32" height="32"/></a></td>
+                    <td><input id="zulipAdminRCInput" class="form-control" type="text" onmouseleave="onmouseOff('zulipAdminRCInput')" onmouseover="onmouseOn('zulipAdminRCInput', '{{current_user.zulipAdminRC|e}}')" placeholder="*************" readonly></td>
+                    <td>
+                        {% if current_user.zulipAdminRCValidity == 'Valid'%}
+                        Yes
+                        {% else %}
+                        No
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Zulip Bot RC</td>
+                    <td><a href="{{url_for('ZulipBotRC')}}"><img src="/static/svgs/cloud-arrow-up.svg" width="32" height="32"/></a></td>
+                    <td><input id="zulipBotRCInput" class="form-control" type="text" onmouseleave="onmouseOff('zulipBotRCInput')" onmouseover="onmouseOn('zulipBotRCInput', '{{current_user.zulipBotRC|e}}')" placeholder="*************" readonly></td>
+                    <td>
+                        {% if current_user.zulipBotRCValidity == 'Valid' %}
+                        Yes
+                        {% else %}
+                        No
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

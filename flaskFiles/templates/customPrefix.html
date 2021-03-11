@@ -1,0 +1,74 @@
+<title>Custom Prefix</title>
+{% extends "commonLayout.html" %}
+{% block bodyContent %}
+<style>
+    ul.example {
+        list-style-type: none;
+        list-style-image: url('/static/svgs/arrow-return-right.svg');
+    }
+</style>
+<script>
+    window.onload = () => {
+        // onload give the input and output fields correct values
+        displayFormatting('slackInput', 'slackOutput');
+        displayFormatting('zulipInput', 'zulipOutput');
+    }
+    
+    let emojiString = "{{emojiList}}".replaceAll('&#39;', ' ').replace('[', '').replace(']', '');
+</script>
+<script src="/static/javascript/editPrefixes.js"></script>
+
+<div class="container">
+    <br>
+    <p class="display-4">Custom Slack and Zulip Prefixes</p><br>
+    <div class="container">
+        This page allows you to customise the default prefix to all sent messages.<br>
+        Below are examples of variables you can include in the message.<br><br>
+        These include:<br><br>
+        <div style="vertical-align: top;  display:inline-block;">
+            <ul>
+                  <li style="list-style-type: none;"><b>Variable</b></li>
+                  <li style="list-style-type: none;">{name}</li>
+                  <li style="list-style-type: none;">{email}</li>
+                  <li style="list-style-type: none;">{channel}</li>
+                  <li style="list-style-type: none;"><label>{emoji}&nbsp;</label><select id="emojiDropdown" class="form-select">
+                    {% for emoji in emojiList %}
+                        <option></option>
+                    {% endfor %}
+                    <script>fixSpacing();</script>
+                </select>
+                  </li><br>
+                 <li style="margin-top: -23px; list-style-type: none;">Multiple variables</li>
+            </ul>
+        </div>
+
+       <div style="vertical-align: top; display:inline-block;">
+            <ul class="example">
+                  <li style="list-style-image: none;" ><b>Example</b></li>
+                  <li>Message from {name}</li>
+                  <li>{email} sent a message</li>
+                  <li>Message sent to {channel}</li>
+                  <li>{emoji-759}</li><br>
+                 <li style="margin-top: -10px;">{emoji-761} sent to {channel} by {name}</li>
+            </ul>
+        </div>
+        <br><br>
+    </div>
+        <p class="h4">Set Message Prefixes</p><br>
+        <div class="container">
+            <form action="" method="POST" onsubmit="processFormInputs('slackInput', 'slackHidden') & processFormInputs('zulipInput', 'zulipHidden')">
+              {{ form.csrf_token }}
+              <label>Slack message prefix:</label>
+                {{form.slackInput(style="width: 400px;", oninput="displayFormatting('slackInput', 'slackOutput')", value=session['slackPrefix'])}}&nbsp;=<label id="slackOutput"></label><br><br>
+
+              <label>Zulip message prefix:</label>
+                {{form.zulipInput(style="width: 400px;", oninput="displayFormatting('zulipInput', 'zulipOutput')", value=session['zulipPrefix'])}}&nbsp;=<label id="zulipOutput"></label><br><br>
+
+                {{form.slackHidden(id="slackHidden")}}
+                {{form.zulipHidden(id="zulipHidden")}}
+
+              <button type="submit" style="margin-right: 5px;" class="btn btn-success btn-sm">Save</button><button id="resetToDefault" onclick="defaultValues()" type="button" class="btn btn-secondary btn-sm">Reset to defaults</button>
+            </form>
+        </div>
+</div>
+{% endblock %}

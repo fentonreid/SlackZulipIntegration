@@ -1,0 +1,97 @@
+<title>Integration Setup</title>
+
+{% extends "commonLayout.html" %}
+{% block bodyContent %}
+<style>
+    .card {
+        border-color: grey;
+        width: 200px;
+    }
+
+    .card-header {
+        border-bottom: 0;
+    }
+</style>
+<script src="/static/javascript/integrationSetup.js"></script>
+<div class="container">
+    <br>
+    <p class="display-4">Integration Setup</p><br>
+    <div class="container">
+        <h4>Slack | Upload and Verify</h4><br>
+        <div class="container">
+            <div class="row">
+                <div class="card">
+                    <div class="card-header h5">App Token</div>
+                    <div class="card-body">
+                        <img src="/static/svgs/upload.svg" width="30" height="30"/>&nbsp;&nbsp;<a href="{{url_for('SlackAppToken')}}" id="slackAppTokenUpload" class="btn btn-info btn-sm"></a><br><br>
+                        <script>setUploadAttributes("slackAppTokenUpload", '{{current_user.slackAppToken|e}}')</script>
+
+                        <form method="POST" action="/integrationSetup/validate/slackAppToken">
+                            <img src="/static/svgs/check2-circle.svg" width="30" height="30"/>&nbsp;&nbsp;<button id="slackAppTokenSubmit" class="btn btn-sm">{{current_user.slackAppTokenValidity}}</button>
+                            <script>setValidateAttributes("slackAppTokenSubmit", '{{current_user.slackAppToken|e}}', '{{current_user.slackAppTokenValidity|e}}');</script>
+                        </form>
+                    </div>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="card">
+                    <div class="card-header h5">Bot Token</div>
+                    <div class="card-body">
+                        <img src="/static/svgs/upload.svg" width="30" height="30"/>&nbsp;&nbsp;<a href="{{url_for('SlackToken')}}" id="slackBotTokenUpload" class="btn btn-info btn-sm"></a><br><br>
+                        <script>setUploadAttributes("slackBotTokenUpload", '{{current_user.slackToken|e}}')</script>
+
+                        <form method="POST" action="/integrationSetup/validate/slackBotToken">
+                            <img src="/static/svgs/check2-circle.svg" width="30" height="30"/>&nbsp;&nbsp;<button id="slackBotTokenSubmit" class="btn btn-sm">{{current_user.slackTokenValidity}}</button>
+                            <script> setValidateAttributes("slackBotTokenSubmit", '{{current_user.slackToken|e}}', '{{current_user.slackTokenValidity|e}}');</script>
+                        </form>
+                    </div>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="card">
+                    <div class="card-header h5">User Token</div>
+                    <div class="card-body">
+                        <img src="/static/svgs/upload.svg" width="30" height="30"/>&nbsp;&nbsp;<a href="{{url_for('SlackUserToken')}}" id="slackUserTokenUpload" class="btn btn-info btn-sm"></a><br><br>
+                        <script>setUploadAttributes("slackUserTokenUpload", '{{current_user.slackUserToken|e}}')</script>
+                        <form method="POST" action="/integrationSetup/validate/slackUserToken">
+                            <img src="/static/svgs/check2-circle.svg" width="30" height="30"/>&nbsp;&nbsp;<button id="slackUserTokenSubmit" class="btn btn-sm">{{current_user.slackUserTokenValidity}}</button>
+                            <script>setValidateAttributes("slackUserTokenSubmit", '{{current_user.slackUserToken|e}}', '{{current_user.slackUserTokenValidity|e}}');</script>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container"><br>
+        <h4>Zulip | Upload and Verify</h4><br>
+        <div class="container">
+            <div class="row">
+                <div class="card">
+                    <div class="card-header h5">Admin RC</div>
+                    <div class="card-body">
+                        <img src="/static/svgs/upload.svg" width="30" height="30"/>&nbsp;&nbsp;<a href="{{url_for('ZulipAdminRC')}}" id="ZulipAdminRCUpload" class="btn btn-info btn-sm"></a><br><br>
+                        <script>setUploadAttributes("ZulipAdminRCUpload", '{{current_user.zulipAdminRC}}')</script>
+
+                        <form method="POST" action="/integrationSetup/validate/zulipAdminRC">
+                            <img src="/static/svgs/check2-circle.svg" width="30" height="30"/>&nbsp;&nbsp;<button id="zulipAdminRCSubmit" class="btn btn-sm">{{current_user.zulipAdminRCValidity}}</button>
+                            <script>setValidateAttributes("zulipAdminRCSubmit", '{{current_user.zulipAdminRC}}', `{{current_user.zulipAdminRCValidity|e}}`);</script>
+                        </form>
+                    </div>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="card">
+                    <div class="card-header h5">Bot RC</div>
+                    <div class="card-body">
+                        <img src="/static/svgs/upload.svg" width="30" height="30"/>&nbsp;&nbsp;<a href="{{url_for('ZulipBotRC')}}" id="ZulipBotRCUpload" class="btn btn-info btn-sm"></a><br><br>
+                        <script>setUploadAttributes("ZulipBotRCUpload",  '{{current_user.zulipBotRC|e}}')</script>
+
+                        <form method="POST" action="/integrationSetup/validate/zulipBotRC">
+                            <img src="/static/svgs/check2-circle.svg" width="30" height="30"/>&nbsp;&nbsp;<button id="zulipBotRCSubmit" class="btn btn-sm">{{current_user.zulipBotRCValidity}}</button>
+                            <script>setValidateAttributes("zulipBotRCSubmit", '{{current_user.zulipBotRC}}', '{{current_user.zulipBotRCValidity|e}}');</script>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

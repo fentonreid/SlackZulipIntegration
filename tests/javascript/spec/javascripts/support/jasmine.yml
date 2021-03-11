@@ -1,0 +1,16 @@
+    src_files:
+          - tests/javascript/spec/javascripts/variableDeclaration.js
+          - flaskFiles/static/javascript/**
+
+    stylesheets:
+
+    spec_files:
+      - "**/*[Ss]pec.js"
+
+    src_dir: ../../
+
+    spec_dir: spec/
+
+    stop_spec_on_expectation_failure:
+
+    stop_on_spec_failure:
