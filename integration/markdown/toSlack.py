@@ -1,10 +1,9 @@
 import json
 import re
 import ply.lex as lex
-from flask import session
 from flask_login import current_user
 from integration.markdown.emojis.shortCodeDict import zulipToSlackDict
-from integration.startup.utilities import parseZulipRC
+from integration.utilities import parseZulipRC
 
 
 def slackMarkdown(message):

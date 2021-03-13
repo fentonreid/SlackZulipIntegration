@@ -1,8 +1,10 @@
 import re
+from json import dumps
+
 from flask import session
 from requests import get, post
 from flask_login import current_user
-from integration.startup.utilities import parseZulipRC
+from integration.utilities import parseZulipRC
 from integration.markdown.toSlack import slackMarkdown
 from integration.webhooks.slackWebHook import slackWebhook, renameChannel, deleteChannel
 from integration.webhooks.zulipWebHook import getZulipTopicList, getStreamID, renameTopic
@@ -15,8 +17,10 @@ def zulipEvents(events):
     :param events: JSON message containing information on the Zulip event
     :type events: JSON payload
     """
-    print(events)
     zulipAuth = parseZulipRC(current_user.zulipBotRC)
+
+    # add the IntegrationBot to Zulip
+    post(zulipAuth['site'] + "/api/v1/users/me/subscriptions", auth=(zulipAuth['email'], zulipAuth['key']), data={'subscriptions': '[{"name": "Slack"}]', 'principals': dumps([zulipAuth['email']])})
 
     # if the event is a message
     if events[0]['type'] == 'message':

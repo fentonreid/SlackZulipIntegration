@@ -1,5 +1,5 @@
 from flask_login import current_user
-from integration.startup.utilities import slackHeader, parseZulipRC
+from integration.utilities import slackHeader, parseZulipRC
 from requests import post, get, patch
 
 

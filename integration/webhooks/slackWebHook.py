@@ -1,6 +1,6 @@
 from urllib import parse
 from flask_login import current_user
-from integration.startup.utilities import parseZulipRC, slackHeader
+from integration.utilities import parseZulipRC, slackHeader
 from requests import get, post
 from datetime import datetime
 

@@ -6,7 +6,7 @@ from integration.markdown.toZulip import zulipMarkdown
 from integration.webhooks.slackWebHook import renameChannel, channelNameToID, slackWebhook
 from integration.webhooks.zulipWebHook import zulipWebhook, deleteTopic, renameTopic, getZulipTopicList
 from urllib import parse
-from integration.startup.utilities import slackHeader, parseZulipRC
+from integration.utilities import slackHeader, parseZulipRC
 
 
 def channelIDToName(channelID):
@@ -83,6 +83,8 @@ def slackEvents(events):
 
         post(zulipAuth['site'] + "/api/v1/users/me/subscriptions",  auth=(zulipAuth['email'], zulipAuth['key']),  data={'subscriptions': '[{"name": "Slack"}]', 'principals': dumps(list(set(userList)))})
 
+        # add the IntegrationBot to Zulip Slack Stream
+        post(zulipAuth['site'] + "/api/v1/users/me/subscriptions", auth=(zulipAuth['email'], zulipAuth['key']), data={'subscriptions': '[{"name": "Slack"}]', 'principals': dumps([zulipAuth['email']])})
 
     if 'user' in events:
         # check if the user who initiated the event is the bot

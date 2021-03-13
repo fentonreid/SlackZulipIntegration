@@ -114,12 +114,12 @@ function startSlack() {
     socket.onmessage = event => {
         // whenever a message is received, parse the stringified result into a JSON format
         let eventJSON = JSON.parse(event.data);
-
         // send acknowledgement back to Slack, a requirement of Socket Mode
         if ('envelope_id' in eventJSON) {
             socket.send(JSON.stringify({
                 "envelope_id": eventJSON['envelope_id']
             }));
+
 
             // send to the flask \slackEvents endpoint
             if ('payload' in eventJSON && 'event' in eventJSON['payload'] && eventJSON['retry_attempt'] <= 0) {

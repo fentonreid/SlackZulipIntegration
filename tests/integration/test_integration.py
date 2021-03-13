@@ -5,7 +5,7 @@ from flask_login import current_user
 from requests import get, post, head, delete
 from integration.events.zulipEvents import zulipEvents, zulipCustomPrefix
 from integration.webhooks.slackWebHook import deleteChannel
-from integration.startup.utilities import parseZulipRC, slackHeader
+from integration.utilities import parseZulipRC, slackHeader
 from integration.events.slackEvents import slackEvents, slackCustomPrefix
 
 zulipAuth = parseZulipRC(current_user.zulipBotRC)

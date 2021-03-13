@@ -3,7 +3,7 @@ from urllib import parse
 from pytest import fixture
 from integration.events.slackEvents import slackCustomPrefix
 from integration.markdown.toSlack import slackMarkdown
-from integration.startup.utilities import parseZulipRC
+from integration.utilities import parseZulipRC
 from tests.integration.test_integration import slackAuth, userEmailList
 from flask_login import current_user
 

@@ -1,9 +1,8 @@
-import json
 from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
 from flask_login import LoginManager
 from flaskFiles.forms import *
-from json import dumps, load
+from json import dumps, load, loads
 from os import urandom, getcwd, chdir, remove, system
 from pytest import main
 from flask import Flask, render_template, flash, url_for, redirect, session, request
@@ -15,7 +14,7 @@ from integration.events.slackEvents import slackEvents
 from integration.events.zulipEvents import zulipEvents
 from integration.markdown.emojis.shortCodeDict import emojiList
 from integration.reportGeneration.parseReport import parseReport
-from integration.startup.utilities import parseZulipRC, slackHeader
+from integration.utilities import parseZulipRC, slackHeader
 
 
 app = Flask(__name__)
@@ -192,9 +191,8 @@ def RunTests():
             jsonFile = originalDir + r"/generated/" + str(current_user.id) + "Report.json"
             chdir("../tests")
 
-            # run both the markdown unit tests and integration tests
-            main(["markdown/", "integration/", "-s", "-q", "--no-header", "--no-summary", "--tb=no", f"--json={jsonFile}"])
-            system("coverage run -m pytest")
+            # run the integration tests
+            main(["integration/", "-s", "-q", "--no-header", "--no-summary", "--tb=no", f"--json={jsonFile}"])
 
             # reset to ensure if tests are written again the directory is not affected
             chdir(originalDir)
@@ -313,7 +311,7 @@ def Settings():
 @app.route('/settings/emojiAdditions', methods=['GET', 'POST'])
 def EmojiAdditions():
     if current_user.is_authenticated:
-        current_user.emojiAdditions = json.loads(current_user.emojiAdditions)
+        current_user.emojiAdditions = loads(current_user.emojiAdditions)
         if request.method == "POST":
             if request.form.get('remove') == "yes":
                 if request.form.get('removeSlack') in current_user.emojiAdditions:
@@ -328,9 +326,9 @@ def EmojiAdditions():
                     flash("Emoji already mapped!", "warning")
 
         # convert to string representation of dictionary
-        current_user.emojiAdditions = json.dumps(current_user.emojiAdditions)
+        current_user.emojiAdditions = dumps(current_user.emojiAdditions)
         db.session.commit()
-        return render_template('emojiAdditions.html', emoji=json.loads(current_user.emojiAdditions))
+        return render_template('emojiAdditions.html', emoji=loads(current_user.emojiAdditions))
 
     flash("Unauthorised access you need to login first!", 'warning')
     return redirect(url_for('Login'))
