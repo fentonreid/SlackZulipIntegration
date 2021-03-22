@@ -201,6 +201,7 @@ def zulipMarkdown(message):
 
     # add each parsed token to a list to be returned
     for tok in tokenList:
+        print(tok)
         parsedList.append(parseToken(tok))
 
     # return a tuple with a Slack formatted message and a list of files

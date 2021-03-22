@@ -4,7 +4,7 @@ from flask import session
 from flask_login import current_user
 from requests import get, post, head, delete
 from integration.events.zulipEvents import zulipEvents, zulipCustomPrefix
-from integration.webhooks.slackWebHook import deleteChannel
+from integration.webhooks.slackWebHook import deleteChannel, slackWebhook
 from integration.utilities import parseZulipRC, slackHeader
 from integration.events.slackEvents import slackEvents, slackCustomPrefix
 
@@ -271,6 +271,43 @@ class TestMessageSending:
             assert False, channelHistoryRequest
 
 
+class TestFileSending:
+    def test_file_sending_slack(self):
+        # Send over the message from Slack to Zulip
+        fileEventJSON = {'type': 'message', 'text': '', 'user' : userID, 'files': [{'name': 'test.txt', 'user': userID, 'url_private': 'https://fentonreid.pythonanywhere.com/testing/test.txt'}], 'channel': getChannelID("test_channel")}
+        fileEventJSON = slackEvents(fileEventJSON)
+
+        # check that the message was received in Zulip
+        params = {'anchor': 'newest',
+                  'num_before': 1, 'num_after': 0,
+                  'narrow': '[{"operator": "stream", "operand" : "Slack"}, {"operator": "topic", "operand" : "test_channel"}]',
+                  'apply_markdown': 'false'
+                  }
+
+        # Assert that the message was sent to Zulip
+        getNewestMessageRequest = get(zulipAuth['site'] + "/api/v1/messages", params=params, auth=(zulipAuth['email'], zulipAuth['key']))
+        assert getNewestMessageRequest.status_code == 200
+
+        # Check that the message is present in the test_channel stream and that it has a certain message type
+        getNewestMessageRequest = getNewestMessageRequest.json()
+        assert getNewestMessageRequest['result'] == 'success' and 'messages' in getNewestMessageRequest, "Failed to retrieve messages from Zulip " + str(getNewestMessageRequest['msg'])
+
+        # Check that the newest message has the test.txt file uploaded
+        newMessage = getNewestMessageRequest['messages'][0]['content']
+        assert newMessage.find("[test.txt](/user_uploads/") > -1, "Failed to get the last message sent from Zulip"
+
+    def test_file_sending_zulip(self):
+        sendFileEvent = slackWebhook("test_channel", "", files=[('test.txt', 'https://fentonreid.pythonanywhere.com/testing/test.txt')])
+        assert sendFileEvent == "Message sent", "Slack could not create message"
+
+        # Check that the last Slack message is the file being sent
+        channelHistoryRequest = get("https://slack.com/api/conversations.history?" + parse.urlencode({"channel": getChannelID("test_channel"), "limit": 1}), headers=slackAuth)
+        assert channelHistoryRequest.status_code == 200, "Requests failed to fetch :: https://slack.com/api/conversations.history"
+        channelHistoryRequest = channelHistoryRequest.json()
+
+        assert channelHistoryRequest['ok'] and channelHistoryRequest['messages'][0]['files'][0]['name'] == "test.txt" and channelHistoryRequest['messages'][0]['files'][0]['url_private'].endswith("/test.txt")
+
+
 class TestEmojiAdditions:
     def test_emoji_additions_with_new_mapping_added(self):
         # Add to the current_user.emojiAdditions dictionary
@@ -295,7 +332,7 @@ class TestEmojiAdditions:
         current_user.emojiAdditions = '{}'
 
         # Create a zulip emoji message
-        createEmojiMSG = {'type': 'message', 'message': {'content': 'New mapping added: :heart:', 'subject': 'test_channel', 'sender_full_name': 'FR acc 1', 'sender_email': 'fenton.reid.2017@uni.strath.ac.uk', 'sender_realm_str': 'fenton', 'display_recipient': 'Slack', 'type': 'stream'}}
+        createEmojiMSG = {'type': 'message', 'message': {'content': 'New mapping added: :heart_zulip:', 'subject': 'test_channel', 'sender_full_name': 'FR acc 1', 'sender_email': 'fenton.reid.2017@uni.strath.ac.uk', 'sender_realm_str': 'fenton', 'display_recipient': 'Slack', 'type': 'stream'}}
         createEmojiEvent = zulipEvents([createEmojiMSG])
         assert createEmojiEvent == "Message sent", "Slack could not send message"
 
@@ -316,7 +353,7 @@ class TestRename:
         renameChannelJSON = {'type': 'message', 'subtype': 'channel_name', 'old_name': 'test_channel', 'name': 'test_channel_new'}
         renameChannelEvent = slackEvents(renameChannelJSON)
         assert renameChannelEvent == "slack renamed a channel", "Zulip could not rename channel"
-        
+
         # check in Zulip that the latest message has topic named `test_channel_new`
         params = {'anchor': 'newest',
                   'num_before': 1, 'num_after': 0,

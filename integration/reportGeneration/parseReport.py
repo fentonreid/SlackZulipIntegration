@@ -13,6 +13,9 @@ class parseReport():
         self.testData = []
 
     def summary(self):
+        """
+        Storing the summary information that includes the date created, number of tests passed and failed and percentage of passed
+        """
         if 'summary' in self.reportJSON['report']:
             summary = self.reportJSON['report']['summary']
 
@@ -35,6 +38,9 @@ class parseReport():
                     self.percentagePassed = 0
 
     def tests(self):
+        """
+        Iterates through all tests and stores the id, test name, result, duration, and, a failure message if present
+        """
         if 'report' in self.reportJSON and 'tests' in self.reportJSON['report']:
             testList = self.reportJSON['report']['tests']
 
@@ -62,5 +68,8 @@ class parseReport():
 
 
     def generate(self):
+        """
+        Populate the testData list with both summary and all test data
+        """
         self.summary()
         self.tests()

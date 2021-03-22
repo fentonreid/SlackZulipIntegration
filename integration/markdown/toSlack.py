@@ -168,13 +168,13 @@ def slackMarkdown(message):
 
 
     def santiseBoldItalicStrike(tokenType):
-        '''
+        """
         Prevent bold, italic and strike tokens spanning multiple lines without being ended,
-        e.g. """*bold\n*""" -> """*bold\n*"""
+        e.g. `*bold\n*` -> `*bold\n*`
 
         :param tokenType: Name of token that requires sanitisation
         :type tokenType: String
-        '''
+        """
         for _ in tokenList:
             sanitiseList = []
             for i, token in enumerate(tokenList):

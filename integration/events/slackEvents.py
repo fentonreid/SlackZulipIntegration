@@ -34,7 +34,10 @@ def handleFiles(files):
 
 def updateHistory(events):
     """
-
+    Maintains a reference of the Slack channels prior to the current event, used for determining the channel that was deleted
+    
+    :param events: JSON message containing event information
+    :type events: JSON payload
     """
     if events['type'] != 'channel_deleted':
         # get all the channels in Slack
@@ -80,11 +83,10 @@ def slackEvents(events):
             for memberID in members:
                 userRequest = get(f"https://slack.com/api/users.profile.get?{parse.urlencode({'user': memberID})}", headers=slackAuth).json()
                 if 'ok' in userRequest and 'profile' in userRequest and 'email' in userRequest['profile']:  userList.append(userRequest['profile']['email'])
-
-        post(zulipAuth['site'] + "/api/v1/users/me/subscriptions",  auth=(zulipAuth['email'], zulipAuth['key']),  data={'subscriptions': '[{"name": "Slack"}]', 'principals': dumps(list(set(userList)))})
-
+        
         # add the IntegrationBot to Zulip Slack Stream
-        post(zulipAuth['site'] + "/api/v1/users/me/subscriptions", auth=(zulipAuth['email'], zulipAuth['key']), data={'subscriptions': '[{"name": "Slack"}]', 'principals': dumps([zulipAuth['email']])})
+        userList.append(zulipAuth['email'])
+        post(zulipAuth['site'] + "/api/v1/users/me/subscriptions", auth=(zulipAuth['email'], zulipAuth['key']), data={'subscriptions': '[{"name": "Slack"}]', 'principals': dumps(userList)})
 
     if 'user' in events:
         # check if the user who initiated the event is the bot

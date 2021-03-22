@@ -1,3 +1,8 @@
+import os
+import sys
+
+sys.path.append("\\".join(os.getcwd().split("\\")[:-3]))
+
 from integration.markdown.emojis.shortCodeDict import getCommonEmojis
 # code to automatically upload the emojiList found in shortCodeDict.py
 
@@ -7,7 +12,6 @@ if str(type(newEmojiList)).find("list"):
     # get current contents of shortCodeDict.py
     with open('shortCodeDict.py', 'r', encoding="utf8") as scd:
         contents = scd.readlines()
-        duplicate = scd.readlines()
 
     with open('shortCodeDict.py', 'w', encoding="utf8") as scd:
         for count, line in enumerate(contents):

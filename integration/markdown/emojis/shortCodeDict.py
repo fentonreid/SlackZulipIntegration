@@ -29,13 +29,7 @@ def slackDict():
     Return a dictionary of unicode points to short codes.
     """
     slackJSON = get("https://raw.githubusercontent.com/iamcal/emoji-data/master/emoji.json").json()
-    slackDict = {}
-
-    for emoji in slackJSON:
-        slackDict[unicodePoint(emoji['unified'])] = ':' + emoji['short_name'] + ':'
-    unicodePoint(emoji['unified'])
-
-    return slackDict
+    return {unicodePoint(emoji['unified']) :  ':' + emoji['short_name'] + ':' for emoji in slackJSON}
 
 
 def zulipDict():
@@ -43,18 +37,15 @@ def zulipDict():
     Makes a get response to the Zulip GitHub: emoji_names.py file, https://raw.githubusercontent.com/zulip/zulip/master/tools/setup/emoji/emoji_names.py.
     exec the emoji_names.py file and convert the typing dictionary into a Zulip dictionary of codepoints as keys and shortcodes as values.
     """
-    # need to exec the code coming from
     emoji_names = get("https://raw.githubusercontent.com/zulip/zulip/master/tools/setup/emoji/emoji_names.py")
-    # modify the github code to return the EMOJI_NAME_MAPS
+
+    # modify the github code to return the EMOJI_NAME_MAPS dictionary
     resultDictionary = {}
     exec(emoji_names.content, locals(), resultDictionary)
     emoji_dictionary = resultDictionary['EMOJI_NAME_MAPS']
 
-    zulipDict = {}
-    for entry in emoji_dictionary:
-        zulipDict[unicodePoint(entry)] = ":" + emoji_dictionary[entry]['canonical_name'] + ":"
+    return {unicodePoint(entry) :  ":" + emoji_dictionary[entry]['canonical_name'] + ":" for entry in emoji_dictionary}
 
-    return zulipDict
 
 
 def getCommonEmojis():

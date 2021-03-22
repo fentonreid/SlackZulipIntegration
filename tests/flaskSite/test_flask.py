@@ -471,7 +471,6 @@ class Test_zulipBot_upload_validation:
 class TestDisabledTestMode:
     def test_redirection(self, client, persistLogin):
         response = client.get(url_for('RunTests'), follow_redirects=True)
-
         assert response.status_code == 200
         assert b'Enable testing mode before proceeding!' in response.data
         assert request.path == url_for('Settings')

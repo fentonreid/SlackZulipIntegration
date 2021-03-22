@@ -77,7 +77,7 @@ def callMarkdownTests():
 
             # Call PyTest
             os.chdir("..")
-            main(["integration/", "-s", "--tb=native"])
+            main(["integration/", "-v", "-r a", "--tb=native"])
 
 
 callMarkdownTests()

@@ -35,6 +35,7 @@ def slackWebhook(channel, content, **kwargs):
     :param kwargs: Files
     :type kwargs: List of Tuples that for each element contain a filename and URL
     """
+
     zulipAuth = parseZulipRC(current_user.zulipBotRC)
     slackAuth = slackHeader(current_user.slackToken)
 

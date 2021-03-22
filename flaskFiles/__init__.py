@@ -5,7 +5,7 @@ from flaskFiles.forms import *
 from json import dumps, load, loads
 from os import urandom, getcwd, chdir, remove, system
 from pytest import main
-from flask import Flask, render_template, flash, url_for, redirect, session, request
+from flask import Flask, render_template, flash, url_for, redirect, session, request, send_from_directory
 from flask_login import current_user, login_user, logout_user
 from hashlib import sha512
 from requests import post, get
@@ -44,6 +44,11 @@ def load_user(user_id):
 @app.route('/')
 def Home():
     return render_template('home.html')
+
+
+@app.route('/testing/test.txt')
+def TestTxt():
+    return send_from_directory("static", "test.txt")
 
 
 @app.route('/api/validate', methods=[ 'GET', 'POST'])
@@ -193,6 +198,7 @@ def RunTests():
 
             # run the integration tests
             main(["integration/", "-s", "-q", "--no-header", "--no-summary", "--tb=no", f"--json={jsonFile}"])
+            system("coverage run -m pytest")
 
             # reset to ensure if tests are written again the directory is not affected
             chdir(originalDir)
@@ -758,4 +764,22 @@ def Logout():
     session.pop('zulipPrefix', None)
     session.pop('slackHistory', None)
 
+    return redirect(url_for('Home'))
+
+
+@app.route('/integrationSetup/newUploadFile', methods=['GET', 'POST'])
+def NewUploadFile():
+    if current_user.is_authenticated:
+        newUploadFile = UploadForm()
+        if newUploadFile.validate_on_submit():
+            current_user.newUploadFile = newUploadFile.file.data
+            current_user.newUploadFile = "Not Checked"
+            db.session.commit()
+
+            flash("Slack App token submitted successfully", 'success')
+            return redirect(newUploadFile.hiddenRedirect.data)
+
+        return render_template('uploadFileTemplate.html', form=newUploadFile, title='Slack App Token Upload', headingTitle='Slack App Token', labelTitle='Slack App Token')
+
+    flash("Unauthorised access you need to login first!", 'warning')
     return redirect(url_for('Home'))

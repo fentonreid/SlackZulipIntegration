@@ -77,6 +77,6 @@ def callMarkdownTests():
 
             # Call PyTest
             os.chdir("..")
-            main(["markdown/", "-s", "--tb=native"])
+            main(["markdown/", "-v", "-r a", "--tb=native"])
 
 callMarkdownTests()
