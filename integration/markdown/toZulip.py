@@ -48,7 +48,7 @@ def zulipMarkdown(message):
     t_BOLD = r"\*"
     t_ITALIC = r"\_"
     t_STRIKE = r"\~"
-    t_LIST = r"^[ ]*[\-\+\*][^\`\*\n]*$"
+    t_LIST = r"^[ ]*[\-\+\•\*][^\`\*\n]*$"
     t_SIMPLELINK = r"[\<][^<>|]+[\>]"
     t_COMPLEXLINK = r"[\<][^<>|]+\|[^<>|]+[\>]"
     t_QUOTE = r"^[ ]*\>[ ]*"
@@ -201,7 +201,6 @@ def zulipMarkdown(message):
 
     # add each parsed token to a list to be returned
     for tok in tokenList:
-        print(tok)
         parsedList.append(parseToken(tok))
 
     # return a tuple with a Slack formatted message and a list of files
