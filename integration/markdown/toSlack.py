@@ -112,7 +112,7 @@ def slackMarkdown(message):
         elif Ttype == 'BULLETLIST':
             # remove all spaces and collect only the text in the list
             splitValue = slackMarkdown(' '.join(value.strip().split()[1:]))[0]
-            return '- ' + splitValue
+            return '• ' + splitValue
 
         elif Ttype == 'NUMBERLIST':
             # apply markdown conversion to the values after the numbers
