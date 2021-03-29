@@ -198,7 +198,6 @@ def RunTests():
 
             # run the integration tests
             main(["integration/", "-s", "-q", "--no-header", "--no-summary", "--tb=no", f"--json={jsonFile}"])
-            system("coverage run -m pytest")
 
             # reset to ensure if tests are written again the directory is not affected
             chdir(originalDir)
