@@ -139,10 +139,10 @@ class TestMultiLineCode:
 
 class TestBulletLists:
     def test_BulletList(self):
-        assert slackMarkdown("- bullet 1\n- bullet 2") == ('\n- bullet 1\n- bullet 2', [])
-        assert slackMarkdown("   -     bullet 1\n   -     bullet 2") == ('\n- bullet 1\n- bullet 2', [])
-        assert slackMarkdown("+ bullet 1\n+ bullet 2") == ('\n- bullet 1\n- bullet 2', [])
-        assert slackMarkdown("* bullet 1\n* bullet 2") == ('\n- bullet 1\n- bullet 2', [])
+        assert slackMarkdown("- bullet 1\n- bullet 2") == ('\n• bullet 1\n• bullet 2', [])
+        assert slackMarkdown("   -     bullet 1\n   -     bullet 2") == ('\n• bullet 1\n• bullet 2', [])
+        assert slackMarkdown("+ bullet 1\n+ bullet 2") == ('\n• bullet 1\n• bullet 2', [])
+        assert slackMarkdown("* bullet 1\n* bullet 2") == ('\n• bullet 1\n• bullet 2', [])
 
 
 class TestNumberedList:
