@@ -103,16 +103,9 @@ def zulipMarkdown(message):
             beforePipe = value[1:pipe]
             afterPipe = value[pipe+1:-1]
 
-            try:
-                # if the before and after pipes are both urls e.g. <http://www.google.com|www.google.com>
-                if beforePipe.startswith("https://") or beforePipe.startswith("http://"):
-                    # if the url before the pipe is valid then convert to zulip website link
-                    if get(beforePipe).status_code == 200:
-                        return "[" + zulipMarkdown(afterPipe)[0] + "]" + "(" + beforePipe + ")"
-                    else:
-                        return value
-            except:
-                return value
+            # if the before and after pipes are both urls e.g. <http://www.google.com|www.google.com>
+            if beforePipe.startswith("https://") or beforePipe.startswith("http://"):
+                    return "[" + zulipMarkdown(afterPipe)[0] + "]" + "(" + beforePipe + ")"
 
         elif Ttype == 'SPACE':
             return value
